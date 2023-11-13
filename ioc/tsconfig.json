@@ -1,0 +1,22 @@
+{
+	"extends": "@tsconfig/node16/tsconfig.json",
+	"ts-node": {
+		"moduleTypes": {
+			"jest.config.ts": "cjs"
+		}
+	},
+	"compilerOptions": {
+		"strict": false,
+		"experimentalDecorators": true,
+		"target": "ES2020",
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"module": "CommonJS",
+		"types": ["node", "jest", "reflect-metadata"]
+	},
+	"exclude": ["node_modules", "tests", "./setup.jest.ts"]
+}

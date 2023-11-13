@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ioc-service
+  labels:
+    k8s-app: kafka-ioc-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: kafka-ioc-service
+  template:
+    metadata:
+      labels:
+        k8s-app: kafka-ioc-service
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: kafka-ioc-service
+          image: registry.paranoids.us/kafka-ioc-service:main
+          imagePullPolicy: Always
+          env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: '4000'
+            - name: KAFKA__SERVERS
+              value: '192.168.105.121:9092'
+            - name: KAFKA__USERNAME
+              value: ''
+            - name: KAFKA__PASSWORD
+              value: ''
+            - name: KAFKA__MECHANISM
+              value: 'PLAIN'
+            - name: KAFKA__SCHEMA_REGISTRY__HOST
+              value: 'schema-registry-svc.databases.svc.cluster.local:8081'
+            - name: KAFKA__SCHEMA_REGISTRY__USERNAME
+              value: ''
+            - name: KAFKA__SCHEMA_REGISTRY__PASSWORD
+              value: ''
+            - name: LOGGER__LEVEL
+              value: 'info'
+            - name: LOGGER__EVENTS
+              value: ''
+          ports:
+            - containerPort: 4000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 60
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ioc-service
+  labels:
+    k8s-app: kafka-ioc-service
+spec:
+  ports:
+    - port: 4000
+      targetPort: 4000
+  selector:
+    k8s-app: kafka-ioc-service

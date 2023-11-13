@@ -1,0 +1,10 @@
+.vscode
+node_modules/
+coverage/
+deploy
+dist/
+*.yaml
+*.yml
+docker-compose-only.yaml
+docker-compose.yaml
+.github/
