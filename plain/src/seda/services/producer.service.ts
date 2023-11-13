@@ -39,7 +39,7 @@ export class EventBroker implements IEventBroker {
 				protoIndexes.set(type, indexes);
 			});
 		});
-		const schemaResolver = new proto.TopicNameSchemaResolver(root, 'com.yalo.schemas.events', protoIndexes, client.SerializationType.ValueSerialization, this._schema);
+		const schemaResolver = new proto.TopicNameSchemaResolver(root, 'com.yalo.schemas.events', protoIndexes, client.SerializationType.ValueSerialization, this._schema, undefined);
 		const serializer = new proto.ProtobufSerializer(schemaResolver, (event: proto.ProtobufAlike<any>) => populateMetadata(event, populateSource));
 		const producer = new client.Producer<string, proto.ProtobufAlike<any>>(this._kafka.producer(), new client.StringSerializer(), serializer, new MessageNameTopicResolver());
 		await producer.connect();
